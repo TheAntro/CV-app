@@ -1,34 +1,45 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const morgan = require('morgan');
+const helmet = require('helmet');
+const connectDB = require('./config/db');
 
-require('dotenv').config();
+// Load environment variables
+dotenv.config({ path: './config/config.env' });
 
-const app = express();
-const db = process.env.DB_CONN;
-
-const connectDB = async () => {
-  try {
-    await mongoose.connect(db, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    });
-
-    console.log('MongoDB Connected');
-  } catch (err) {
-    console.error(err.message);
-    // Exit process with failure
-    process.exit(1);
-  }
-};
-
+// Connect to database
 connectDB();
 
-const PORT = process.env.port || 5000;
+// Route files
+const profile = require('./routes/profile');
+const education = require('./routes/education');
+const experience = require('./routes/experience');
+
+const app = express();
 
 app.get('/', (req, res) => {
   return res.status(200).send('Server running');
 })
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+// Logging middleware for development
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+// Security headers
+app.use(helmet());
+
+// Mount routers
+app.use('/api/profile', profile);
+app.use('/api/education', education);
+app.use('/api/experience', experience);
+
+const PORT = process.env.port || 5000;
+const server = app.listen(PORT, console.log(`Server started on port ${PORT}`));
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+  console.log(`Error: ${err.message}`);
+  // Close server and exit process
+  server.close(() => process.exit(1));
+});
