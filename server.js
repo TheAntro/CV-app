@@ -17,17 +17,19 @@ const experience = require('./routes/experience');
 
 const app = express();
 
-app.get('/', (req, res) => {
-  return res.status(200).send('Server running');
-})
-
+// Middleware
+// JSON bodyparser
+app.use(express.json());
 // Logging middleware for development
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-// Security headers
+// Set security headers
 app.use(helmet());
+
+app.get('/', (req, res) => {
+  return res.status(200).send('Server running');
+})
 
 // Mount routers
 app.use('/api/profile', profile);

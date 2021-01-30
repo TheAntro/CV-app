@@ -35,7 +35,6 @@ const ProfileSchema = new mongoose.Schema({
     github: String,
     scholar: String,
   },
-  photo: String,
 });
 
 module.exports = mongoose.model('profile', ProfileSchema);
