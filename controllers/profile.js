@@ -3,15 +3,15 @@ const Profile = require('../models/Profile');
 // @desc  Get full profile
 // @route GET /api/profile
 // @access Public
-exports.getProfile = async (req, res) =>  {
+exports.getProfile = async (req, res) => {
   try {
-    const profile = await Profile.find();
+    const profile = await Profile.find().populate('experience');
     res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
 
 // @desc  Add or update a profile
 // @route POST /api/profile
@@ -50,10 +50,10 @@ exports.createProfile = async (req, res) => {
       profile = await Profile.findByIdAndUpdate(
         { _id: req.body.id },
         { $set: profileObject },
-        { new: true },
+        { new: true }
       );
 
-      return res.status(200).json(profile)
+      return res.status(200).json(profile);
     }
 
     profile = new Profile(profileObject);
@@ -63,17 +63,17 @@ exports.createProfile = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
 
 // @desc  Delete profile
 // @route DELETE /api/profile
 // @access Public
-exports.deleteProfile = async (req, res) =>  {
+exports.deleteProfile = async (req, res) => {
   try {
     await Profile.findByIdAndRemove(req.body.id);
-    res.status(200).json({ msg: 'Profile deleted'});
+    res.status(200).json({ msg: 'Profile deleted' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
