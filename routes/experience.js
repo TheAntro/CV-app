@@ -1,8 +1,8 @@
 const express = require('express');
-const { getAllExperience } = require('../controllers/experience');
+const { getAllExperience, addExperience } = require('../controllers/experience');
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').get(getAllExperience);
+router.route('/').get(getAllExperience).post(addExperience);
 
 module.exports = router;

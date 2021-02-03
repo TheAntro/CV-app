@@ -13,11 +13,9 @@ exports.getProfile = async (req, res) =>  {
   }
 }
 
-// @desc  Add a profile
+// @desc  Add or update a profile
 // @route POST /api/profile
 // @access Public
-/* Not in use: not necessary to add more profiles at this point,
-If taken back to use, reapply to the route file.
 exports.createProfile = async (req, res) => {
   const {
     name,
@@ -46,7 +44,19 @@ exports.createProfile = async (req, res) => {
   if (scholar) profileObject.social.scholar = scholar;
 
   try {
-    const profile = new Profile(profileObject);
+    let profile = await Profile.findById(req.body.id);
+    if (profile) {
+      //Update existing profile
+      profile = await Profile.findByIdAndUpdate(
+        { _id: req.body.id },
+        { $set: profileObject },
+        { new: true },
+      );
+
+      return res.status(200).json(profile)
+    }
+
+    profile = new Profile(profileObject);
     await profile.save();
     return res.status(201).json(profile);
   } catch (err) {
@@ -54,4 +64,16 @@ exports.createProfile = async (req, res) => {
     res.status(500).send('Server Error');
   }
 }
-*/
+
+// @desc  Delete profile
+// @route DELETE /api/profile
+// @access Public
+exports.deleteProfile = async (req, res) =>  {
+  try {
+    await Profile.findByIdAndRemove(req.body.id);
+    res.status(200).json({ msg: 'Profile deleted'});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+}

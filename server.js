@@ -14,6 +14,7 @@ connectDB();
 const profile = require('./routes/profile');
 const education = require('./routes/education');
 const experience = require('./routes/experience');
+const skill = require('./routes/skill');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.get('/', (req, res) => {
 app.use('/api/profile', profile);
 app.use('/api/education', education);
 app.use('/api/experience', experience);
+app.use('/api/skill', skill);
 
 const PORT = process.env.port || 5000;
 const server = app.listen(PORT, console.log(`Server started on port ${PORT}`));

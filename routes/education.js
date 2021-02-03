@@ -1,8 +1,8 @@
 const express = require('express');
-const { getAllEducation } = require('../controllers/education');
+const { getAllEducation, addEducation } = require('../controllers/education');
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').get(getAllEducation);
+router.route('/').get(getAllEducation).post(addEducation);
 
 module.exports = router;

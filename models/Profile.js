@@ -35,6 +35,29 @@ const ProfileSchema = new mongoose.Schema({
     github: String,
     scholar: String,
   },
+  /* Move this to its own model
+  references: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      title: {
+        type: String,
+        required: true,
+      },
+      phone: {
+        type: String,
+      },
+      email: {
+        type: String,
+      },
+      company: {
+        type: String,
+      }
+    }
+  ]
+  */
 });
 
 module.exports = mongoose.model('profile', ProfileSchema);
