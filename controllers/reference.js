@@ -36,3 +36,29 @@ exports.addReference = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// @desc  Delete all references
+// @route DELETE /api/reference
+// @access Public
+exports.deleteReferences = async (req, res) => {
+  try {
+    await Reference.deleteMany();
+    res.status(200).json({ msg: 'All References Deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc  Delete a reference
+// @route DELETE /api/reference/:id
+// @access Public
+exports.deleteReference = async (req, res) => {
+  try {
+    await Reference.findByIdAndDelete(req.params.id);
+    res.status(200).json({ msg: `Reference ${req.params.id} deleted` });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};

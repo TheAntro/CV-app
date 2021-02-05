@@ -1,5 +1,6 @@
 const express = require('express');
 const { 
+  getProfiles,
   getProfile,
   createProfile,
   deleteProfile
@@ -7,6 +8,7 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
-router.route('/').get(getProfile).post(createProfile).delete(deleteProfile);
+router.route('/').get(getProfiles).post(createProfile).delete(deleteProfile);
+router.route('/:id').get(getProfile);
 
 module.exports = router;

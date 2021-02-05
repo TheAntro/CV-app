@@ -1,7 +1,7 @@
 const Skill = require('../models/Skill');
 
-// @desc  Get all references
-// @route GET /api/reference
+// @desc  Get all skills
+// @route GET /api/skill
 // @access Public
 exports.getSkills = async (req, res) => {
   try {
@@ -13,8 +13,8 @@ exports.getSkills = async (req, res) => {
   }
 };
 
-// @desc  Add a reference
-// @route POST /api/reference
+// @desc  Add a skill
+// @route POST /api/skill
 // @access Public
 exports.addSkills = async (req, res) => {
   const { profile, description, mainSkills, otherSkills } = req.body;
@@ -22,8 +22,8 @@ exports.addSkills = async (req, res) => {
   const skillsObject = {};
   if (profile) skillsObject.profile = profile;
   if (description) skillsObject.description = description;
-  if (mainSkills) skillsObject.mainSkills = mainSkills;
-  if (otherSkills) skillsObject.otherSkills = otherSkills;
+  if (mainSkills) skillsObject.mainSkills = mainSkills.split(',').map((skill) => skill.trim());
+  if (otherSkills) skillsObject.otherSkills = otherSkills.split(',').map((skill) => skill.trim());
 
   try {
     const skills = new Skill(skillsObject);
@@ -35,13 +35,26 @@ exports.addSkills = async (req, res) => {
   }
 };
 
-// @desc  Delete profile
-// @route DELETE /api/profile
+// @desc  Delete all skills
+// @route DELETE /api/skill
 // @access Public
 exports.deleteSkills = async (req, res) => {
   try {
     await Skill.deleteMany();
     res.status(200).json({ msg: 'All Skills Deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc  Delete a skill
+// @route DELETE /api/skill/:id
+// @access Public
+exports.deleteSkill = async (req, res) => {
+  try {
+    await Skill.findByIdAndDelete(req.params.id);
+    res.status(200).json({ msg: `Skill ${req.params.id} deleted` });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

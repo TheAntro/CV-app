@@ -1,11 +1,24 @@
 const Profile = require('../models/Profile');
 
-// @desc  Get full profile
+// @desc  Get all profiles
 // @route GET /api/profile
+// @access Public
+exports.getProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find();
+    res.status(200).json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc  Get profile by id
+// @route GET /api/profile/:id
 // @access Public
 exports.getProfile = async (req, res) => {
   try {
-    const profile = await Profile.find().populate('experience');
+    const profile = await Profile.findById(req.params.id).populate('skill experience education reference');
     res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);

@@ -36,29 +36,6 @@ const ProfileSchema = new mongoose.Schema(
       github: String,
       scholar: String,
     },
-    /* Move this to its own model
-    references: [
-      {
-        name: {
-          type: String,
-          required: true,
-        },
-        title: {
-          type: String,
-          required: true,
-        },
-        phone: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        company: {
-          type: String,
-        }
-      }
-    ]
-    */
   },
   {
     toJSON: { virtuals: true },
@@ -71,6 +48,8 @@ ProfileSchema.pre('remove', async function (next) {
   console.log(`Content being removed from ${this._id}`);
   await this.model('Education').deleteMany({ profile: this._id });
   await this.model('Experience').deleteMany({ profile: this._id });
+  await this.model('Reference').deleteMany({ profile: this._id });
+  await this.model('Skill').deleteMany({ profile: this._id });
   next();
 });
 
@@ -84,6 +63,20 @@ ProfileSchema.virtual('education', {
 
 ProfileSchema.virtual('experience', {
   ref: 'experience',
+  localField: '_id',
+  foreignField: 'profile',
+  justOne: false,
+});
+
+ProfileSchema.virtual('reference', {
+  ref: 'reference',
+  localField: '_id',
+  foreignField: 'profile',
+  justOne: false,
+});
+
+ProfileSchema.virtual('skill', {
+  ref: 'skill',
   localField: '_id',
   foreignField: 'profile',
   justOne: false,

@@ -9,11 +9,11 @@ const SkillSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  mainskills: {
+  mainSkills: {
     type: [String],
     required: true,
   },
-  otherskills: {
+  otherSkills: {
     type: [String],
   }
 });

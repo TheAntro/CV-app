@@ -50,3 +50,29 @@ exports.addEducation = async (req, res) => {
     res.status(500).send('Server Error');
   }
 }
+
+// @desc  Delete all education
+// @route DELETE /api/education
+// @access Public
+exports.deleteEducations = async (req, res) => {
+  try {
+    await Education.deleteMany();
+    res.status(200).json({ msg: 'All Education Deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc  Delete a education
+// @route DELETE /api/education/:id
+// @access Public
+exports.deleteEducation = async (req, res) => {
+  try {
+    await Education.findByIdAndDelete(req.params.id);
+    res.status(200).json({ msg: `Education ${req.params.id} deleted` });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};

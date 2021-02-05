@@ -48,3 +48,29 @@ exports.addExperience = async (req, res) => {
     res.status(500).send('Server Error');
   }
 }
+
+// @desc  Delete all experiences
+// @route DELETE /api/experience
+// @access Public
+exports.deleteExperiences = async (req, res) => {
+  try {
+    await Experience.deleteMany();
+    res.status(200).json({ msg: 'All Experiences Deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc  Delete an experience
+// @route DELETE /api/experience/:id
+// @access Public
+exports.deleteExperience = async (req, res) => {
+  try {
+    await Experience.findByIdAndDelete(req.params.id);
+    res.status(200).json({ msg: `Experience ${req.params.id} deleted` });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
