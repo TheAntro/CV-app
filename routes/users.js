@@ -3,12 +3,12 @@ const {
   getUsers,
   getUser,
   registerUser,
-  DeleteUser,
+  deleteUser,
 } = require('../controllers/users');
 
 const router = express.Router({ mergeParams: true });
 
-//router.route('/').get(getUsers).post(registerUser).delete(deleteUser);
-//router.route('/:id').get(getUser);
+router.route('/').get(getUsers).post(registerUser);
+router.route('/:id').get(getUser).delete(deleteUser);
 
 module.exports = router;
