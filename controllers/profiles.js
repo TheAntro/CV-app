@@ -1,7 +1,7 @@
 const Profile = require('../models/Profile');
 
 // @desc  Get all profiles
-// @route GET /api/profile
+// @route GET /api/profiles
 // @access Public
 exports.getProfiles = async (req, res) => {
   try {
@@ -14,11 +14,13 @@ exports.getProfiles = async (req, res) => {
 };
 
 // @desc  Get profile by id
-// @route GET /api/profile/:id
+// @route GET /api/profiles/:id
 // @access Public
 exports.getProfile = async (req, res) => {
   try {
-    const profile = await Profile.findById(req.params.id).populate('skill experience education reference');
+    const profile = await Profile.findById(req.params.id).populate(
+      'skill experience education reference'
+    );
     res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);
@@ -27,7 +29,7 @@ exports.getProfile = async (req, res) => {
 };
 
 // @desc  Add or update a profile
-// @route POST /api/profile
+// @route POST /api/profiles
 // @access Public
 exports.createProfile = async (req, res) => {
   const {
@@ -78,8 +80,8 @@ exports.createProfile = async (req, res) => {
   }
 };
 
-// @desc  Delete profile
-// @route DELETE /api/profile
+// @desc  Delete a profile
+// @route DELETE /api/profiles/:id
 // @access Public
 exports.deleteProfile = async (req, res) => {
   try {

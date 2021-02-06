@@ -1,10 +1,10 @@
 const express = require('express');
-const { 
-  getSkills, 
-  addSkills, 
-  deleteSkills, 
-  deleteSkill 
-} = require('../controllers/skill');
+const {
+  getSkills,
+  addSkills,
+  deleteSkills,
+  deleteSkill,
+} = require('../controllers/skills');
 
 const router = express.Router({ mergeParams: true });
 

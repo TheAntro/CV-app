@@ -11,11 +11,12 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 // Route files
-const profile = require('./routes/profile');
-const education = require('./routes/education');
-const experience = require('./routes/experience');
-const skill = require('./routes/skill');
-const reference = require('./routes/reference');
+const profiles = require('./routes/profiles');
+const educations = require('./routes/educations');
+const experiences = require('./routes/experiences');
+const skills = require('./routes/skills');
+const references = require('./routes/references');
+const users = require('./routes/users');
 
 const app = express();
 
@@ -34,11 +35,12 @@ app.get('/', (req, res) => {
 });
 
 // Mount routers
-app.use('/api/profile', profile);
-app.use('/api/education', education);
-app.use('/api/experience', experience);
-app.use('/api/skill', skill);
-app.use('/api/reference', reference);
+app.use('/api/profiles', profiles);
+app.use('/api/educations', educations);
+app.use('/api/experiences', experiences);
+app.use('/api/skills', skills);
+app.use('/api/references', references);
+app.use('/api/users', users);
 
 const PORT = process.env.port || 5000;
 const server = app.listen(PORT, console.log(`Server started on port ${PORT}`));

@@ -1,9 +1,9 @@
 const Experience = require('../models/Experience');
 
 // @desc  Get all experience
-// @route GET /api/experience
+// @route GET /api/experiences
 // @access Public
-exports.getAllExperience = async (req, res) =>  {
+exports.getAllExperience = async (req, res) => {
   try {
     const experience = await Experience.find();
     res.status(200).json(experience);
@@ -11,10 +11,10 @@ exports.getAllExperience = async (req, res) =>  {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
 
 // @desc  Add an experience
-// @route POST /api/experience
+// @route POST /api/experiences
 // @access Public
 exports.addExperience = async (req, res) => {
   const {
@@ -25,10 +25,9 @@ exports.addExperience = async (req, res) => {
     from,
     to,
     current,
-    description
+    description,
   } = req.body;
 
-  // Profile object
   const experienceObject = {};
   if (profile) experienceObject.profile = profile;
   if (company) experienceObject.company = company;
@@ -47,10 +46,10 @@ exports.addExperience = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
 
 // @desc  Delete all experiences
-// @route DELETE /api/experience
+// @route DELETE /api/experiences
 // @access Public
 exports.deleteExperiences = async (req, res) => {
   try {
@@ -63,7 +62,7 @@ exports.deleteExperiences = async (req, res) => {
 };
 
 // @desc  Delete an experience
-// @route DELETE /api/experience/:id
+// @route DELETE /api/experiences/:id
 // @access Public
 exports.deleteExperience = async (req, res) => {
   try {

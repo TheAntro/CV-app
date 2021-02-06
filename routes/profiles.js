@@ -1,10 +1,10 @@
 const express = require('express');
-const { 
+const {
   getProfiles,
   getProfile,
   createProfile,
-  deleteProfile
-} = require('../controllers/profile');
+  deleteProfile,
+} = require('../controllers/profiles');
 
 const router = express.Router({ mergeParams: true });
 

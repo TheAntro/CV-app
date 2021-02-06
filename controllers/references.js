@@ -1,7 +1,7 @@
 const Reference = require('../models/Reference');
 
 // @desc  Get all references
-// @route GET /api/reference
+// @route GET /api/references
 // @access Public
 exports.getReferences = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ exports.getReferences = async (req, res) => {
 };
 
 // @desc  Add a reference
-// @route POST /api/reference
+// @route POST /api/references
 // @access Public
 exports.addReference = async (req, res) => {
   const { profile, name, title, phone, email, company } = req.body;
@@ -38,7 +38,7 @@ exports.addReference = async (req, res) => {
 };
 
 // @desc  Delete all references
-// @route DELETE /api/reference
+// @route DELETE /api/references
 // @access Public
 exports.deleteReferences = async (req, res) => {
   try {
@@ -51,7 +51,7 @@ exports.deleteReferences = async (req, res) => {
 };
 
 // @desc  Delete a reference
-// @route DELETE /api/reference/:id
+// @route DELETE /api/references/:id
 // @access Public
 exports.deleteReference = async (req, res) => {
   try {

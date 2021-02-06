@@ -1,7 +1,7 @@
 const Skill = require('../models/Skill');
 
 // @desc  Get all skills
-// @route GET /api/skill
+// @route GET /api/skills
 // @access Public
 exports.getSkills = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ exports.getSkills = async (req, res) => {
 };
 
 // @desc  Add a skill
-// @route POST /api/skill
+// @route POST /api/skills
 // @access Public
 exports.addSkills = async (req, res) => {
   const { profile, description, mainSkills, otherSkills } = req.body;
@@ -22,8 +22,14 @@ exports.addSkills = async (req, res) => {
   const skillsObject = {};
   if (profile) skillsObject.profile = profile;
   if (description) skillsObject.description = description;
-  if (mainSkills) skillsObject.mainSkills = mainSkills.split(',').map((skill) => skill.trim());
-  if (otherSkills) skillsObject.otherSkills = otherSkills.split(',').map((skill) => skill.trim());
+  if (mainSkills)
+    skillsObject.mainSkills = mainSkills
+      .split(',')
+      .map((skill) => skill.trim());
+  if (otherSkills)
+    skillsObject.otherSkills = otherSkills
+      .split(',')
+      .map((skill) => skill.trim());
 
   try {
     const skills = new Skill(skillsObject);
@@ -36,7 +42,7 @@ exports.addSkills = async (req, res) => {
 };
 
 // @desc  Delete all skills
-// @route DELETE /api/skill
+// @route DELETE /api/skills
 // @access Public
 exports.deleteSkills = async (req, res) => {
   try {
@@ -49,7 +55,7 @@ exports.deleteSkills = async (req, res) => {
 };
 
 // @desc  Delete a skill
-// @route DELETE /api/skill/:id
+// @route DELETE /api/skills/:id
 // @access Public
 exports.deleteSkill = async (req, res) => {
   try {

@@ -1,9 +1,9 @@
 const Education = require('../models/Education');
 
 // @desc  Get all education
-// @route GET /api/education
+// @route GET /api/educations
 // @access Public
-exports.getAllEducation = async (req, res) =>  {
+exports.getAllEducation = async (req, res) => {
   try {
     const education = await Education.find();
     res.status(200).json(education);
@@ -11,10 +11,10 @@ exports.getAllEducation = async (req, res) =>  {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
 
-// @desc  Add an experience
-// @route POST /api/experience
+// @desc  Add an education
+// @route POST /api/educations
 // @access Public
 exports.addEducation = async (req, res) => {
   const {
@@ -26,10 +26,10 @@ exports.addEducation = async (req, res) => {
     from,
     to,
     current,
-    description
+    description,
   } = req.body;
 
-  // Profile object
+  // Object for saving
   const educationObject = {};
   if (profile) educationObject.profile = profile;
   if (school) educationObject.school = school;
@@ -49,10 +49,10 @@ exports.addEducation = async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-}
+};
 
 // @desc  Delete all education
-// @route DELETE /api/education
+// @route DELETE /api/educations
 // @access Public
 exports.deleteEducations = async (req, res) => {
   try {
@@ -65,7 +65,7 @@ exports.deleteEducations = async (req, res) => {
 };
 
 // @desc  Delete a education
-// @route DELETE /api/education/:id
+// @route DELETE /api/educations/:id
 // @access Public
 exports.deleteEducation = async (req, res) => {
   try {
