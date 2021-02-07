@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 exports.protect = async function (req, res, next) {
@@ -10,7 +11,7 @@ exports.protect = async function (req, res, next) {
     .split(':');
   try {
     const user = await User.findOne({ email });
-    if (user && user.password === password) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       next();
     } else {
       res.status(401).json({ msg: 'Unauthorized' });

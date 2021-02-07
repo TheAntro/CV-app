@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 // @desc Get all users
@@ -34,6 +35,8 @@ exports.registerUser = async (req, res) => {
   userObject.email = req.body.email;
   userObject.password = req.body.password;
   try {
+    userObject.password = await bcrypt.hash(req.body.password, 8);
+    console.log(userObject.password);
     let user = new User(userObject);
     await user.save();
     res.status(201).json(user);
