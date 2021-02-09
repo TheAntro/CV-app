@@ -4,12 +4,22 @@ const Skill = require('../models/Skill');
 // @route GET /api/skills
 // @access Public
 exports.getSkills = async (req, res) => {
-  try {
-    const skills = await Skill.find();
-    res.status(200).json(skills);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
+  if (req.user.role === 'admin') {
+    try {
+      const AllSkills = await Skill.find();
+      res.status(200).json(AllSkills);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  } else {
+    try {
+      const skills = await Skill.find({ profile: req.user.profileId });
+      res.status(200).json(skills);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }
 };
 
@@ -33,13 +43,12 @@ exports.addSkills = async (req, res) => {
 
   try {
     // Check that the user is associated with the profile the addition is being made to
-    const usersProfile = await Profile.findOne( {email: req.user.email} );
-    if (usersProfile && usersProfile.id === profile) {
+    if (req.user.profileId === profile) {
       const skills = new Skill(skillsObject);
       await skills.save();
       return res.status(201).json(skills);
     } else {
-      return res.status(401).json({msg: 'Unauthorized' });
+      return res.status(401).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
@@ -65,8 +74,13 @@ exports.deleteSkills = async (req, res) => {
 // @access Public
 exports.deleteSkill = async (req, res) => {
   try {
-    await Skill.findByIdAndDelete(req.params.id);
-    res.status(200).json({ msg: `Skill ${req.params.id} deleted` });
+    const skill = await Skill.findById(req.params.id);
+    if (req.user.profileId === skill.profile.toString()) {
+      await Skill.findByIdAndDelete(req.params.id);
+      res.status(200).json({ msg: `Skill ${req.params.id} deleted` });
+    } else {
+      res.status(401).json({ msg: 'Unauthorized' });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

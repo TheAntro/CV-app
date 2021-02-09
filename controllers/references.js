@@ -28,9 +28,8 @@ exports.addReference = async (req, res) => {
   if (company) referenceObject.company = company;
 
   try {
-    // Check that the user is associated with the profile the addition is being made to
-    const usersProfile = await Profile.findOne( {email: req.user.email} );
-    if (usersProfile && usersProfile.id === profile) {
+    // Check that the user is associated with the profile the change is being made to
+    if (req.user.profileId === profile) {
       const reference = new Reference(referenceObject);
       await reference.save();
       return res.status(201).json(reference);
@@ -62,8 +61,13 @@ exports.deleteReferences = async (req, res) => {
 exports.deleteReference = async (req, res) => {
   try {
     // TODO: Check that the user is associated with the profile the addition is being made to
-    await Reference.findByIdAndDelete(req.params.id);
-    res.status(200).json({ msg: `Reference ${req.params.id} deleted` });
+    const reference = await Reference.findById(req.params.id);
+    if (req.user.profileId === reference.profile.toString()) {
+      await Reference.findByIdAndDelete(req.params.id);
+      res.status(200).json({ msg: `Reference ${req.params.id} deleted` });
+    } else {
+      res.status(401).json({ msg: 'Unauthorized' });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

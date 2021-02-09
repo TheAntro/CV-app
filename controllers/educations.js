@@ -18,7 +18,6 @@ exports.getAllEducation = async (req, res) => {
 // @route POST /api/educations
 // @access Public
 exports.addEducation = async (req, res) => {
-
   const {
     profile,
     school,
@@ -44,10 +43,9 @@ exports.addEducation = async (req, res) => {
   if (description) educationObject.description = description;
 
   try {
-    const education = new Education(educationObject);
     // Check that the user is associated with the profile the addition is being made to
-    const usersProfile = await Profile.findOne( {email: req.user.email} );
-    if (usersProfile && usersProfile.id === profile) {
+    if (req.user.profileId === profile) {
+      const education = new Education(educationObject);
       await education.save();
       return res.status(201).json(education);
     } else {
@@ -78,9 +76,8 @@ exports.deleteEducations = async (req, res) => {
 exports.deleteEducation = async (req, res) => {
   try {
     // Check that the user is associated with the profile the change is being made to
-    const usersProfile = await Profile.findOne({ email: req.user.email });
     const education = await Education.findById(req.params.id);
-    if (usersProfile && usersProfile.id === education.profile.toString()) {
+    if (req.user.profileId === education.profile.toString()) {
       await Education.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Education ${req.params.id} deleted` });
     } else {
