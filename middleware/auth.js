@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Profile = require('../models/Profile');
 
 // @desc Authorizes the api use by checking that Basic Auth credentials are valid.
 //       Adds user details into req.user for easy access
@@ -11,7 +12,9 @@ exports.authorize = async function (req, res, next) {
   try {
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
+      const profile = await Profile.findOne({ email });
       req.user = user;
+      req.user.profile = profile.id;
       next();
     } else {
       res.status(401).json({ msg: 'Unauthorized' });

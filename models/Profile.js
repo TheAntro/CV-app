@@ -26,6 +26,8 @@ const ProfileSchema = new mongoose.Schema(
         /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
         'Please add a valid email',
       ],
+      unique: [true, 'Profile with the email already exists'],
+      required: [true, 'Please add an email']
     },
     phone: {
       type: String,

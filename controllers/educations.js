@@ -72,14 +72,20 @@ exports.deleteEducations = async (req, res) => {
   }
 };
 
-// @desc  Delete a education
+// @desc  Delete an education
 // @route DELETE /api/educations/:id
 // @access Public
 exports.deleteEducation = async (req, res) => {
   try {
-    // TODO: Check that the user is associated with the profile the addition is being made to
-    await Education.findByIdAndDelete(req.params.id);
-    res.status(200).json({ msg: `Education ${req.params.id} deleted` });
+    // Check that the user is associated with the profile the change is being made to
+    const usersProfile = await Profile.findOne({ email: req.user.email });
+    const education = await Education.findById(req.params.id);
+    if (usersProfile && usersProfile.id === education.profile.toString()) {
+      await Education.findByIdAndDelete(req.params.id);
+      res.status(200).json({ msg: `Education ${req.params.id} deleted` });
+    } else {
+      res.status(401).json({ msg: 'Unauthorized' });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -44,6 +44,11 @@ exports.createProfile = async (req, res) => {
     scholar,
   } = req.body;
 
+  // Check that the api user is creating a profile for themselves, or is an admin
+  if (!(req.user.email === email || req.user.role === 'admin')) {
+    return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
   // Profile object
   const profileObject = {};
   profileObject.address = {};
