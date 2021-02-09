@@ -5,8 +5,11 @@ const {
   deleteEducations,
   deleteEducation,
 } = require('../controllers/educations');
+const { authorize, hasRole } = require('../middleware/auth');
 
 const router = express.Router({ mergeParams: true });
+
+router.use(authorize);
 
 router
   .route('/')

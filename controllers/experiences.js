@@ -39,9 +39,15 @@ exports.addExperience = async (req, res) => {
   if (description) experienceObject.description = description;
 
   try {
-    const experience = new Experience(experienceObject);
-    await experience.save();
-    return res.status(201).json(experience);
+    // Check that the user is associated with the profile the addition is being made to
+    const usersProfile = await Profile.findOne( {email: req.user.email} );
+    if (usersProfile && usersProfile.id === profile) {
+      const experience = new Experience(experienceObject);
+      await experience.save();
+      return res.status(201).json(experience);
+    } else {
+      return res.status(401).json({ msg: 'Unauthorized'});
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -66,6 +72,7 @@ exports.deleteExperiences = async (req, res) => {
 // @access Public
 exports.deleteExperience = async (req, res) => {
   try {
+    // TODO: Check that the user is associated with the profile the addition is being made to
     await Experience.findByIdAndDelete(req.params.id);
     res.status(200).json({ msg: `Experience ${req.params.id} deleted` });
   } catch (err) {

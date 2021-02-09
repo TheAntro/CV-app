@@ -1,4 +1,5 @@
 const Education = require('../models/Education');
+const Profile = require('../models/Profile');
 
 // @desc  Get all education
 // @route GET /api/educations
@@ -17,6 +18,7 @@ exports.getAllEducation = async (req, res) => {
 // @route POST /api/educations
 // @access Public
 exports.addEducation = async (req, res) => {
+
   const {
     profile,
     school,
@@ -43,8 +45,14 @@ exports.addEducation = async (req, res) => {
 
   try {
     const education = new Education(educationObject);
-    await education.save();
-    return res.status(201).json(education);
+    // Check that the user is associated with the profile the addition is being made to
+    const usersProfile = await Profile.findOne( {email: req.user.email} );
+    if (usersProfile && usersProfile.id === profile) {
+      await education.save();
+      return res.status(201).json(education);
+    } else {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -69,6 +77,7 @@ exports.deleteEducations = async (req, res) => {
 // @access Public
 exports.deleteEducation = async (req, res) => {
   try {
+    // TODO: Check that the user is associated with the profile the addition is being made to
     await Education.findByIdAndDelete(req.params.id);
     res.status(200).json({ msg: `Education ${req.params.id} deleted` });
   } catch (err) {

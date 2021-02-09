@@ -32,9 +32,15 @@ exports.addSkills = async (req, res) => {
       .map((skill) => skill.trim());
 
   try {
-    const skills = new Skill(skillsObject);
-    await skills.save();
-    return res.status(201).json(skills);
+    // Check that the user is associated with the profile the addition is being made to
+    const usersProfile = await Profile.findOne( {email: req.user.email} );
+    if (usersProfile && usersProfile.id === profile) {
+      const skills = new Skill(skillsObject);
+      await skills.save();
+      return res.status(201).json(skills);
+    } else {
+      return res.status(401).json({msg: 'Unauthorized' });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -85,6 +85,7 @@ exports.createProfile = async (req, res) => {
 // @access Public
 exports.deleteProfile = async (req, res) => {
   try {
+    // TODO: Check that the user is associated with the profile the change is being made to
     await Profile.findByIdAndRemove(req.body.id);
     res.status(200).json({ msg: 'Profile deleted' });
   } catch (err) {

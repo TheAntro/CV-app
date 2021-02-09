@@ -24,7 +24,7 @@ exports.authorize = async function (req, res, next) {
 
 // @desc Checks that the user has the role based authorization to access the resource. 
 //       Requires authorize middleware to set req.user header
-exports.protect = (...roles) => {
+exports.hasRole = (...roles) => {
   return async (req, res, next) => {
     console.log('protect entered');
     if(roles.includes(req.user.role)) {
