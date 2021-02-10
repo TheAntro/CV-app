@@ -9,7 +9,7 @@ exports.getReferences = async (req, res) => {
     if (req.user.role !== 'admin') {
       references = references.filter(reference => reference.profile === req.user.profileId);
     }
-    references.length !== 0 ? res.status(200).json(references) : res.status(404).json({ msg: 'No references found'});
+    references.length > 0 ? res.status(200).json(references) : res.status(404).json({ msg: 'No references found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -37,7 +37,7 @@ exports.addReference = async (req, res) => {
       await reference.save();
       return res.status(201).json(reference);
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
@@ -71,7 +71,7 @@ exports.deleteReference = async (req, res) => {
       await Reference.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Reference ${req.params.id} deleted` });
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);

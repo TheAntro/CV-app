@@ -9,7 +9,7 @@ exports.getSkills = async (req, res) => {
     if (req.user.role !== 'admin') {
       skills = skills.filter(skill => skill.profile === req.user.profileId);
     }
-    skills.length !== 0 ? res.status(200).json(skills) : res.status(404).json({ msg: 'No skills found'});
+    skills.length > 0 ? res.status(200).json(skills) : res.status(404).json({ msg: 'No skills found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -41,7 +41,7 @@ exports.addSkills = async (req, res) => {
       await skills.save();
       return res.status(201).json(skills);
     } else {
-      return res.status(401).json({ msg: 'Unauthorized' });
+      return res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
@@ -75,7 +75,7 @@ exports.deleteSkill = async (req, res) => {
       await Skill.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Skill ${req.params.id} deleted` });
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);

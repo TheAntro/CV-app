@@ -42,7 +42,7 @@ exports.hasRole = (...roles) => {
     if (roles.includes(req.user.role)) {
       next();
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   };
 };

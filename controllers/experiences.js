@@ -6,7 +6,10 @@ const Experience = require('../models/Experience');
 exports.getAllExperience = async (req, res) => {
   try {
     const experience = await Experience.find();
-    res.status(200).json(experience);
+    if (req.user.role !== 'admin') {
+      experience = experience.filter(experience => experience.profile === req.user.profileId);
+    }
+    experience.length > 0 ? res.status(200).json(experience) : res.status(404).json({ msg: 'No experience found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -45,7 +48,7 @@ exports.addExperience = async (req, res) => {
       await experience.save();
       return res.status(201).json(experience);
     } else {
-      return res.status(401).json({ msg: 'Unauthorized' });
+      return res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
@@ -80,7 +83,7 @@ exports.deleteExperience = async (req, res) => {
       await Experience.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Experience ${req.params.id} deleted` });
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);

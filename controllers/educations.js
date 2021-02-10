@@ -7,7 +7,10 @@ const Profile = require('../models/Profile');
 exports.getAllEducation = async (req, res) => {
   try {
     const education = await Education.find();
-    education ? res.status(200).json(education) : res.status(404).json({ msg: 'No education found'});
+    if (req.user.role !== 'admin') {
+      education = education.filter(education => education.profile === req.user.profileId);
+    }
+    education.length > 0 ? res.status(200).json(education) : res.status(404).json({ msg: 'No education found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -49,7 +52,7 @@ exports.addEducation = async (req, res) => {
       await education.save();
       return res.status(201).json(education);
     } else {
-      return res.status(401).json({ msg: 'Unauthorized' });
+      return res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
@@ -83,7 +86,7 @@ exports.deleteEducation = async (req, res) => {
       await Education.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Education ${req.params.id} deleted` });
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);

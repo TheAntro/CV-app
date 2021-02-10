@@ -47,7 +47,7 @@ exports.createProfile = async (req, res) => {
 
   // Check that the api user is creating a profile for themselves, or is an admin
   if (!(req.user.email === email || req.user.role === 'admin')) {
-    return res.status(401).json({ msg: 'Unauthorized' });
+    return res.status(403).json({ msg: 'Unauthorized' });
   }
 
   // Profile object
@@ -95,7 +95,7 @@ exports.deleteProfile = async (req, res) => {
       const removed = await Profile.findByIdAndRemove(req.params.id);
       removed ? res.status(200).json({ msg: `Profile ${req.params.id} deleted` }): res.status(404).json({ msg: 'Profile not found'});
     } else {
-      res.status(401).json({ msg: 'Unauthorized' });
+      res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
