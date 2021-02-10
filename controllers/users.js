@@ -7,7 +7,7 @@ const User = require('../models/User');
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find();
-    users ? res.status(200).json(users) : res.status(404).json({ msg: 'No users found'});
+    users ? res.status(200).json({data: users}) : res.status(404).json({ msg: 'No users found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -20,7 +20,7 @@ exports.getUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    user ? res.status(200).json(user) : res.status(404).json({ msg: 'User not found'});
+    user ? res.status(200).json({data: user}) : res.status(404).json({ msg: 'User not found'});
   } catch (err) {
     console.error(err.message);
     err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is not valid`}) : res.status(500).send('Server Error');
@@ -39,7 +39,7 @@ exports.registerUser = async (req, res) => {
     console.log(userObject.password);
     let user = new User(userObject);
     await user.save();
-    res.status(201).json(user);
+    res.status(201).json({data: user});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

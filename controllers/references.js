@@ -9,7 +9,7 @@ exports.getReferences = async (req, res) => {
     if (req.user.role !== 'admin') {
       references = references.filter(reference => reference.profile === req.user.profileId);
     }
-    references.length > 0 ? res.status(200).json(references) : res.status(404).json({ msg: 'No references found'});
+    references.length > 0 ? res.status(200).json({data: references}) : res.status(404).json({ msg: 'No references found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -35,7 +35,7 @@ exports.addReference = async (req, res) => {
     if (req.user.profileId === profile) {
       const reference = new Reference(referenceObject);
       await reference.save();
-      return res.status(201).json(reference);
+      return res.status(201).json({data: reference});
     } else {
       res.status(403).json({ msg: 'Unauthorized' });
     }

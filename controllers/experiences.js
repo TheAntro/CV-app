@@ -9,7 +9,7 @@ exports.getAllExperience = async (req, res) => {
     if (req.user.role !== 'admin') {
       experience = experience.filter(experience => experience.profile === req.user.profileId);
     }
-    experience.length > 0 ? res.status(200).json(experience) : res.status(404).json({ msg: 'No experience found'});
+    experience.length > 0 ? res.status(200).json({data: experience}) : res.status(404).json({ msg: 'No experience found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -46,7 +46,7 @@ exports.addExperience = async (req, res) => {
     if (req.user.profileId === profile) {
       const experience = new Experience(experienceObject);
       await experience.save();
-      return res.status(201).json(experience);
+      return res.status(201).json({data: experience});
     } else {
       return res.status(403).json({ msg: 'Unauthorized' });
     }

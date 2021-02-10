@@ -6,7 +6,7 @@ const Profile = require('../models/Profile');
 exports.getProfiles = async (req, res) => {
   try {
     const profiles = await Profile.find();
-    profiles ? res.status(200).json(profiles) : res.status(404).json({ msg: 'No profiles found'});
+    profiles ? res.status(200).json({data: profiles}) : res.status(404).json({ msg: 'No profiles found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -21,8 +21,7 @@ exports.getProfile = async (req, res) => {
     const profile = await Profile.findById(req.params.id).populate(
       'skill experience education reference'
     );
-    profile ? res.status(200).json(profile) : res.status(404).json({ msg: 'Profile not found'});
-    res.status(200).json(profile);
+    profile ? res.status(200).json({data: profile}) : res.status(404).json({ msg: 'Profile not found'});
   } catch (err) {
     console.error(err.message);
     err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
@@ -74,12 +73,12 @@ exports.createProfile = async (req, res) => {
         { new: true }
       );
 
-      return res.status(200).json(profile);
+      return res.status(200).json({data: profile});
     }
 
     profile = new Profile(profileObject);
     await profile.save();
-    return res.status(201).json(profile);
+    return res.status(201).json({data: profile});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

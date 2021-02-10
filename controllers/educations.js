@@ -10,7 +10,7 @@ exports.getAllEducation = async (req, res) => {
     if (req.user.role !== 'admin') {
       education = education.filter(education => education.profile === req.user.profileId);
     }
-    education.length > 0 ? res.status(200).json(education) : res.status(404).json({ msg: 'No education found'});
+    education.length > 0 ? res.status(200).json({data: education}) : res.status(404).json({ msg: 'No education found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -50,7 +50,7 @@ exports.addEducation = async (req, res) => {
     if (req.user.profileId === profile) {
       const education = new Education(educationObject);
       await education.save();
-      return res.status(201).json(education);
+      return res.status(201).json({data: education});
     } else {
       return res.status(403).json({ msg: 'Unauthorized' });
     }
