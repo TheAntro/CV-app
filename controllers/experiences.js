@@ -73,7 +73,7 @@ exports.deleteExperience = async (req, res) => {
   try {
     // Check that the user is associated with the profile the change is being made to
     const experience = await Experience.findById(req.params.id);
-    if (req.user.profileId === education.profile.toString()) {
+    if (req.user.profileId === experience.profile.toString()) {
       await Experience.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Experience ${req.params.id} deleted` });
     } else {
@@ -81,6 +81,6 @@ exports.deleteExperience = async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
   }
 };

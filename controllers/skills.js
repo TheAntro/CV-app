@@ -1,31 +1,24 @@
 const Skill = require('../models/Skill');
 
-// @desc  Get all skills
+// @desc  Get skills associated with the user, or all skills if the user is an admin
 // @route GET /api/skills
-// @access Public
+// @access Private
 exports.getSkills = async (req, res) => {
-  if (req.user.role === 'admin') {
-    try {
-      const AllSkills = await Skill.find();
-      res.status(200).json(AllSkills);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+  try {
+    let skills = await Skill.find();
+    if (req.user.role !== 'admin') {
+      skills = skills.filter(skill => skill.profile === req.user.profileId);
     }
-  } else {
-    try {
-      const skills = await Skill.find({ profile: req.user.profileId });
-      res.status(200).json(skills);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
-    }
+    skills.length !== 0 ? res.status(200).json(skills) : res.status(404).json({ msg: 'No skills found'});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 };
 
 // @desc  Add a skill
 // @route POST /api/skills
-// @access Public
+// @access Private
 exports.addSkills = async (req, res) => {
   const { profile, description, mainSkills, otherSkills } = req.body;
 
@@ -58,7 +51,7 @@ exports.addSkills = async (req, res) => {
 
 // @desc  Delete all skills
 // @route DELETE /api/skills
-// @access Public
+// @access Admin
 exports.deleteSkills = async (req, res) => {
   try {
     await Skill.deleteMany();
@@ -71,7 +64,7 @@ exports.deleteSkills = async (req, res) => {
 
 // @desc  Delete a skill
 // @route DELETE /api/skills/:id
-// @access Public
+// @access Private
 exports.deleteSkill = async (req, res) => {
   try {
     const skill = await Skill.findById(req.params.id);
@@ -83,6 +76,6 @@ exports.deleteSkill = async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
   }
 };

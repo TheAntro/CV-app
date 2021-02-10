@@ -7,7 +7,7 @@ const Profile = require('../models/Profile');
 exports.getAllEducation = async (req, res) => {
   try {
     const education = await Education.find();
-    res.status(200).json(education);
+    education ? res.status(200).json(education) : res.status(404).json({ msg: 'No education found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -85,6 +85,6 @@ exports.deleteEducation = async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
   }
 };

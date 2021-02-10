@@ -5,8 +5,11 @@ const Reference = require('../models/Reference');
 // @access Public
 exports.getReferences = async (req, res) => {
   try {
-    const references = await Reference.find();
-    res.status(200).json(references);
+    let references = await Reference.find();
+    if (req.user.role !== 'admin') {
+      references = references.filter(reference => reference.profile === req.user.profileId);
+    }
+    references.length !== 0 ? res.status(200).json(references) : res.status(404).json({ msg: 'No references found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

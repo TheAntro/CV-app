@@ -6,7 +6,7 @@ const Profile = require('../models/Profile');
 exports.getProfiles = async (req, res) => {
   try {
     const profiles = await Profile.find();
-    res.status(200).json(profiles);
+    profiles ? res.status(200).json(profiles) : res.status(404).json({ msg: 'No profiles found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -21,16 +21,17 @@ exports.getProfile = async (req, res) => {
     const profile = await Profile.findById(req.params.id).populate(
       'skill experience education reference'
     );
+    profile ? res.status(200).json(profile) : res.status(404).json({ msg: 'Profile not found'});
     res.status(200).json(profile);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
   }
 };
 
 // @desc  Add or update a profile
 // @route POST /api/profiles
-// @access Public
+// @access Private
 exports.createProfile = async (req, res) => {
   const {
     name,
@@ -87,14 +88,18 @@ exports.createProfile = async (req, res) => {
 
 // @desc  Delete a profile
 // @route DELETE /api/profiles/:id
-// @access Public
+// @access Private
 exports.deleteProfile = async (req, res) => {
   try {
     // TODO: Check that the user is associated with the profile the change is being made to
-    await Profile.findByIdAndRemove(req.body.id);
-    res.status(200).json({ msg: 'Profile deleted' });
+    if (req.user.profileId === req.params.id) {
+      await Profile.findByIdAndRemove(req.params.id);
+      res.status(200).json({ msg: 'Profile deleted' });
+    } else {
+      res.status(401).json({ msg: 'Unauthorized' });
+    }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
   }
 };

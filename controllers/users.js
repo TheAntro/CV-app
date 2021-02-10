@@ -7,7 +7,7 @@ const User = require('../models/User');
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).json(users);
+    users ? res.status(200).json(users) : res.status(404).json({ msg: 'No users found'});
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -20,10 +20,10 @@ exports.getUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+    user ? res.status(200).json(user) : res.status(404).json({ msg: 'User not found'});
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is not valid`}) : res.status(500).send('Server Error');
   }
 };
 
@@ -51,10 +51,10 @@ exports.registerUser = async (req, res) => {
 // @access Public
 exports.deleteUser = async (req, res) => {
   try {
-    await User.findByIdAndRemove(req.params.id);
-    res.status(200).json({ msg: `User ${req.params.id} deleted` });
+    const removed = await User.findByIdAndRemove(req.params.id);
+    removed ? res.status(200).json({ msg: `User ${req.params.id} deleted` }): res.status(404).json({ msg: 'User not found'});
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is not valid`}) : res.status(500).send('Server Error');
   }
 };
