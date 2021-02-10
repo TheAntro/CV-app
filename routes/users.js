@@ -9,11 +9,11 @@ const { authorize, hasRole } = require('../middleware/auth');
 
 const router = express.Router({ mergeParams: true });
 router.route('/')
-  .get(authorize, getUsers)
+  .get(authorize, hasRole('admin'), getUsers)
   .post(registerUser);
 router.route('/:id')
-  .all(authorize)
+  .all(authorize, hasRole('admin'))
   .get(getUser)
-  .delete(hasRole('admin'), deleteUser);
+  .delete(deleteUser);
 
 module.exports = router;

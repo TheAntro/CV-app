@@ -2,7 +2,7 @@ const Experience = require('../models/Experience');
 
 // @desc  Get all experience
 // @route GET /api/experiences
-// @access Public
+// @access Users
 exports.getAllExperience = async (req, res) => {
   try {
     const experience = await Experience.find();
@@ -15,7 +15,7 @@ exports.getAllExperience = async (req, res) => {
 
 // @desc  Add an experience
 // @route POST /api/experiences
-// @access Public
+// @access Users
 exports.addExperience = async (req, res) => {
   const {
     profile,
@@ -55,7 +55,7 @@ exports.addExperience = async (req, res) => {
 
 // @desc  Delete all experiences
 // @route DELETE /api/experiences
-// @access Public
+// @access Admin
 exports.deleteExperiences = async (req, res) => {
   try {
     await Experience.deleteMany();
@@ -68,11 +68,14 @@ exports.deleteExperiences = async (req, res) => {
 
 // @desc  Delete an experience
 // @route DELETE /api/experiences/:id
-// @access Public
+// @access Users
 exports.deleteExperience = async (req, res) => {
   try {
-    // Check that the user is associated with the profile the change is being made to
     const experience = await Experience.findById(req.params.id);
+    if (!experience) {
+      return res.status(404).json({ msg: `Experience ${req.params.id} not found`});
+    }
+    // Check that the user is associated with the profile the change is being made to
     if (req.user.profileId === experience.profile.toString()) {
       await Experience.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Experience ${req.params.id} deleted` });

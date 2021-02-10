@@ -2,7 +2,7 @@ const Skill = require('../models/Skill');
 
 // @desc  Get skills associated with the user, or all skills if the user is an admin
 // @route GET /api/skills
-// @access Private
+// @access Users
 exports.getSkills = async (req, res) => {
   try {
     let skills = await Skill.find();
@@ -18,7 +18,7 @@ exports.getSkills = async (req, res) => {
 
 // @desc  Add a skill
 // @route POST /api/skills
-// @access Private
+// @access Users
 exports.addSkills = async (req, res) => {
   const { profile, description, mainSkills, otherSkills } = req.body;
 
@@ -64,10 +64,13 @@ exports.deleteSkills = async (req, res) => {
 
 // @desc  Delete a skill
 // @route DELETE /api/skills/:id
-// @access Private
+// @access Users
 exports.deleteSkill = async (req, res) => {
   try {
     const skill = await Skill.findById(req.params.id);
+    if (!skill) {
+      return res.status(404).json({ msg: `Skill ${req.params.id} not found`});
+    }
     if (req.user.profileId === skill.profile.toString()) {
       await Skill.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Skill ${req.params.id} deleted` });

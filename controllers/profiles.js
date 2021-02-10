@@ -31,7 +31,7 @@ exports.getProfile = async (req, res) => {
 
 // @desc  Add or update a profile
 // @route POST /api/profiles
-// @access Private
+// @access Users
 exports.createProfile = async (req, res) => {
   const {
     name,
@@ -88,18 +88,17 @@ exports.createProfile = async (req, res) => {
 
 // @desc  Delete a profile
 // @route DELETE /api/profiles/:id
-// @access Private
+// @access Users
 exports.deleteProfile = async (req, res) => {
   try {
-    // TODO: Check that the user is associated with the profile the change is being made to
     if (req.user.profileId === req.params.id) {
-      await Profile.findByIdAndRemove(req.params.id);
-      res.status(200).json({ msg: 'Profile deleted' });
+      const removed = await Profile.findByIdAndRemove(req.params.id);
+      removed ? res.status(200).json({ msg: `Profile ${req.params.id} deleted` }): res.status(404).json({ msg: 'Profile not found'});
     } else {
       res.status(401).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
-    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
+    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is not valid`}) : res.status(500).send('Server Error');
   }
 };

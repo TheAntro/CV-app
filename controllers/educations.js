@@ -3,7 +3,7 @@ const Profile = require('../models/Profile');
 
 // @desc  Get all education
 // @route GET /api/educations
-// @access Public
+// @access Users
 exports.getAllEducation = async (req, res) => {
   try {
     const education = await Education.find();
@@ -16,7 +16,7 @@ exports.getAllEducation = async (req, res) => {
 
 // @desc  Add an education
 // @route POST /api/educations
-// @access Public
+// @access Users
 exports.addEducation = async (req, res) => {
   const {
     profile,
@@ -59,7 +59,7 @@ exports.addEducation = async (req, res) => {
 
 // @desc  Delete all education
 // @route DELETE /api/educations
-// @access Public
+// @access Admin
 exports.deleteEducations = async (req, res) => {
   try {
     await Education.deleteMany();
@@ -72,11 +72,13 @@ exports.deleteEducations = async (req, res) => {
 
 // @desc  Delete an education
 // @route DELETE /api/educations/:id
-// @access Public
+// @access Users
 exports.deleteEducation = async (req, res) => {
   try {
-    // Check that the user is associated with the profile the change is being made to
     const education = await Education.findById(req.params.id);
+    if (!education) {
+      return res.status(404).json({ msg: `Education ${req.params.id} not found`});
+    }
     if (req.user.profileId === education.profile.toString()) {
       await Education.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Education ${req.params.id} deleted` });

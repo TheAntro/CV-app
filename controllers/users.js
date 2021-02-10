@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 // @desc Get all users
 // @route GET /api/users
-// @access Public
+// @access Admin
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -16,7 +16,7 @@ exports.getUsers = async (req, res) => {
 
 // @desc Get user by id
 // @route GET /api/users/:id
-// @access Public
+// @access Admin
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -48,7 +48,7 @@ exports.registerUser = async (req, res) => {
 
 // @desc Delete a user by id
 // @route DELETE /api/users/:id
-// @access Public
+// @access Admin
 exports.deleteUser = async (req, res) => {
   try {
     const removed = await User.findByIdAndRemove(req.params.id);

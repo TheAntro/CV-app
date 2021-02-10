@@ -2,7 +2,7 @@ const Reference = require('../models/Reference');
 
 // @desc  Get all references
 // @route GET /api/references
-// @access Public
+// @access Users
 exports.getReferences = async (req, res) => {
   try {
     let references = await Reference.find();
@@ -18,7 +18,7 @@ exports.getReferences = async (req, res) => {
 
 // @desc  Add a reference
 // @route POST /api/references
-// @access Public
+// @access Users
 exports.addReference = async (req, res) => {
   const { profile, name, title, phone, email, company } = req.body;
 
@@ -47,7 +47,7 @@ exports.addReference = async (req, res) => {
 
 // @desc  Delete all references
 // @route DELETE /api/references
-// @access Public
+// @access Admin
 exports.deleteReferences = async (req, res) => {
   try {
     await Reference.deleteMany();
@@ -60,11 +60,13 @@ exports.deleteReferences = async (req, res) => {
 
 // @desc  Delete a reference
 // @route DELETE /api/references/:id
-// @access Public
+// @access Users
 exports.deleteReference = async (req, res) => {
   try {
-    // TODO: Check that the user is associated with the profile the addition is being made to
     const reference = await Reference.findById(req.params.id);
+    if (!reference) {
+      return res.status(404).json({ msg: `Reference ${req.params.id} not found`});
+    }
     if (req.user.profileId === reference.profile.toString()) {
       await Reference.findByIdAndDelete(req.params.id);
       res.status(200).json({ msg: `Reference ${req.params.id} deleted` });
