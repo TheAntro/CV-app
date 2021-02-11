@@ -14,6 +14,8 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // Role cannot be set during registration. 
+  // Can be changed to 'admin', but only directly in MongoDB
   role: {
     type: String,
     default: 'user',
