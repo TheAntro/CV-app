@@ -2,6 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 
 // Load environment variables
@@ -20,19 +23,27 @@ const users = require('./routes/users');
 
 const app = express();
 
-// Middleware
-// JSON bodyparser
+/* MIDDLEWARE */
+// JSON body parser
 app.use(express.json());
+
 // Logging middleware for development
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
 // Set security headers
 app.use(helmet());
 
-app.get('/', (req, res) => {
-  return res.status(200).send('Server running');
-});
+// Sanitize data
+app.use(mongoSanitize());
+
+// Prevent XSS attacks
+app.use(xss());
+
+// Prevent http parameter pollution
+app.use(hpp());
+
 
 // Mount routers
 app.use('/api/profiles', profiles);
