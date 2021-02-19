@@ -1,0 +1,11 @@
+{
+  "name": "Test Profile",
+  "street": "Hämeenkatu 1",
+  "zipcode": "33200",
+  "city": "Tampere",
+  "email": "user@gmail.com",
+  "phone": "0400123456",
+  "linkedin": "https://linkedin.com",
+  "github": "https://github.com/",
+  "scholar": "https://scholar.google.com"
+}
