@@ -4,10 +4,14 @@ const ProfilesController = require('../../controllers/profiles');
 const newProfile = require('../mock-data/new-profile.json');
 
 const profileId = '60156119b6c1c64310a61a0a';
+const nonValidId = '60156119b6c1c64310a61a0';
 const nonAuthEmail = 'nonauth@gmail.com';
 
 // Mock model
 jest.mock('../../models/Profile');
+
+// Mock populate virtual for object
+newProfile.populate = jest.fn();
 
 // Global http mock variables
 let req, res, next;
@@ -36,6 +40,7 @@ describe('ProfilesController.getProfile', () => {
 
   test('should call Profile.findById with req params', async () => {
     req.params.id = profileId;
+    Profile.findById.mockReturnValue(newProfile);
     await ProfilesController.getProfile(req, res);
     expect(Profile.findById).toHaveBeenCalledWith(profileId);
   });
