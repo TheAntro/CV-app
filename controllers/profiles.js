@@ -1,4 +1,5 @@
 const Profile = require('../models/Profile');
+const ProfileService = require('../services/profiles');
 
 // @desc  Get all profiles
 // @route GET /api/profiles
@@ -6,7 +7,9 @@ const Profile = require('../models/Profile');
 exports.getProfiles = async (req, res) => {
   try {
     const profiles = await Profile.find();
-    profiles ? res.status(200).json({data: profiles}) : res.status(404).json({ msg: 'No profiles found'});
+    profiles
+      ? res.status(200).json({ data: profiles })
+      : res.status(404).json({ msg: 'No profiles found' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -18,13 +21,17 @@ exports.getProfiles = async (req, res) => {
 // @access Public
 exports.getProfile = async (req, res) => {
   try {
-    const profile = await Profile.findById(req.params.id).populate(
-      'skill experience education reference'
+    const profile = await ProfileService.getProfileByIdAndPopulate(
+      req.params.id
     );
-    profile ? res.status(200).json({data: profile}) : res.status(404).json({ msg: 'Profile not found'});
+    profile
+      ? res.status(200).json({ data: profile })
+      : res.status(404).json({ msg: 'Profile not found' });
   } catch (err) {
     console.error(err.message);
-    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is invalid`}) : res.status(500).send('Server Error');
+    err.kind === 'ObjectId'
+      ? res.status(400).json({ msg: `id ${req.params.id} is invalid` })
+      : res.status(500).send('Server Error');
   }
 };
 
@@ -73,12 +80,12 @@ exports.createProfile = async (req, res) => {
         { new: true }
       );
 
-      return res.status(200).json({data: profile});
+      return res.status(200).json({ data: profile });
     }
 
     profile = new Profile(profileObject);
     await profile.save();
-    return res.status(201).json({data: profile});
+    return res.status(201).json({ data: profile });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -92,12 +99,16 @@ exports.deleteProfile = async (req, res) => {
   try {
     if (req.user.profileId === req.params.id) {
       const removed = await Profile.findByIdAndRemove(req.params.id);
-      removed ? res.status(200).json({ msg: `Profile ${req.params.id} deleted` }): res.status(404).json({ msg: 'Profile not found'});
+      removed
+        ? res.status(200).json({ msg: `Profile ${req.params.id} deleted` })
+        : res.status(404).json({ msg: 'Profile not found' });
     } else {
       res.status(403).json({ msg: 'Unauthorized' });
     }
   } catch (err) {
     console.error(err.message);
-    err.kind === 'ObjectId' ? res.status(400).json({ msg: `id ${req.params.id} is not valid`}) : res.status(500).send('Server Error');
+    err.kind === 'ObjectId'
+      ? res.status(400).json({ msg: `id ${req.params.id} is not valid` })
+      : res.status(500).send('Server Error');
   }
 };
