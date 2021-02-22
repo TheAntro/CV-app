@@ -9,10 +9,14 @@ const nonValidId = '60156119b6c1c64310a61a0';
 const nonAuthEmail = 'nonauth@gmail.com';
 
 // Mock model
-jest.mock('../../models/Profile');
-
-// Mock populate virtual for object
-newProfile.populate = jest.fn();
+jest.mock('../../models/Profile', () => jest.fn());
+const populate = jest.fn();
+const save = jest.fn();
+Profile.findById = jest.fn();
+Profile.find = jest.fn();
+Profile.findByIdAndUpdate = jest.fn();
+Profile.mockImplementation(() => ({ populate }));
+Profile.mockImplementation(() => ({ save }));
 
 // Mock services
 ProfilesService.getProfileByIdAndPopulate = jest.fn();
@@ -50,6 +54,12 @@ describe('ProfilesController.getProfile', () => {
       profileId
     );
   });
+
+  test('should return 404 when the profile is not found', async () => {
+    ProfilesService.getProfileByIdAndPopulate.mockReturnValue(null);
+    await ProfilesController.getProfile(req, res);
+    expect(res.statusCode).toBe(404);
+  });
 });
 
 describe('ProfilesController.createProfile', () => {
@@ -61,12 +71,39 @@ describe('ProfilesController.createProfile', () => {
     expect(typeof ProfilesController.createProfile).toBe('function');
   });
 
+  test('should call save and return 201 when user without a profile creates a profile', async () => {
+    req.user = {};
+    req.user.email = newProfile.email;
+    Profile.findById.mockReturnValue(null);
+    await ProfilesController.createProfile(req, res);
+    expect(save).toHaveBeenCalled();
+    expect(res.statusCode).toBe(201);
+  });
+
+  test('should call findByIdAndUpdate and return 200 when called by a user with a profile', async () => {
+    req.user = {};
+    req.user.email = newProfile.email;
+    Profile.findById.mockReturnValue(newProfile);
+    await ProfilesController.createProfile(req, res);
+    expect(Profile.findByIdAndUpdate).toHaveBeenCalled();
+    expect(res.statusCode).toBe(200);
+  });
+
   test('should return 403 when called by non-authorized user', async () => {
     req.user = {};
     req.user.email = nonAuthEmail;
     await ProfilesController.createProfile(req, res);
     expect(res.statusCode).toBe(403);
     expect(res._isEndCalled()).toBeTruthy();
+  });
+
+  test('should call save and return 201 when admin creates a new profile', async () => {
+    req.user = {};
+    req.user.role = 'admin';
+    Profile.findById.mockReturnValue(null);
+    await ProfilesController.createProfile(req, res);
+    expect(save).toHaveBeenCalled();
+    expect(res.statusCode).toBe(201);
   });
 });
 
