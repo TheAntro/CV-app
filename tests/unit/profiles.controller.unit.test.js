@@ -39,6 +39,14 @@ describe('ProfilesController.getProfiles', () => {
     await ProfilesController.getProfiles(req, res);
     expect(Profile.find).toHaveBeenCalledWith();
   });
+
+  test('should return profiles in an array in res.body.data', async () => {
+    Profile.find.mockReturnValue([newProfile]);
+    await ProfilesController.getProfiles(req, res);
+    res.body = res._getJSONData();
+    expect(Array.isArray(res.body.data)).toBeTruthy();
+    expect(res.body.data[0].name).toBe(newProfile.name);
+  })
 });
 
 describe('ProfilesController.getProfile', () => {
