@@ -1,7 +1,12 @@
+import React, { Fragment } from 'react';
+import Cv from './components/Cv';
+
 import './App.css';
 
 const App = () => 
-<p>Hello world!</p>
+<Fragment>
+  <Cv />
+</Fragment>
 
 
 export default App;
