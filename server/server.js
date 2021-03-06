@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const connectDB = require('./config/db');
 
@@ -26,6 +27,9 @@ const app = express();
 /* MIDDLEWARE */
 // JSON body parser
 app.use(express.json());
+
+// Enable cors
+app.use(cors());
 
 // Logging middleware for development
 if (process.env.NODE_ENV === 'development') {
