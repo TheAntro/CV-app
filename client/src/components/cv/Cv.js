@@ -1,7 +1,9 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getProfileById } from '../actions/profile';
+import { getProfileById } from '../../actions/profile';
+import Personal from './Personal';
+import Skills from './Skills';
 
 const Profile = ({ getProfileById, profile: { profile }, match }) => {
   useEffect(() => {
@@ -9,9 +11,9 @@ const Profile = ({ getProfileById, profile: { profile }, match }) => {
   }, [getProfileById, match.params.id])
   return (
     <Fragment>
-      {profile === null ? <p>{match.params.id}</p> : <Fragment>
-        <h1>{profile.name}</h1>
-        <h2>{profile.email}</h2>
+      {profile === null ? <p>Loading</p> : <Fragment>
+        <Personal profile={ profile } />
+        <Skills skills={ profile.skill[0] } />
       </Fragment>}
     </Fragment>
   )
