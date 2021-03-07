@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 const Personal = ({ profile: {
   name,
+  address,
   email,
   phone,
   social,
@@ -10,6 +11,7 @@ const Personal = ({ profile: {
   return (
     <div>
       <p>{ name }</p>
+      <p>{ address.street }, { address.zipcode } { address.city }</p>
       <p>{ email }</p>
       <p>{ phone }</p>
       <p> { social.linkedin } </p>

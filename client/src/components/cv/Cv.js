@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { getProfileById } from '../../actions/profile';
 import Personal from './Personal';
 import Skills from './Skills';
+import Education from './Education';
+import Experience from './Experience';
+import Reference from './Reference';
 
 const Profile = ({ getProfileById, profile: { profile }, match }) => {
   useEffect(() => {
@@ -14,6 +17,15 @@ const Profile = ({ getProfileById, profile: { profile }, match }) => {
       {profile === null ? <p>Loading</p> : <Fragment>
         <Personal profile={ profile } />
         <Skills skills={ profile.skill[0] } />
+        {profile.education.map(education => (
+          <Education key={education._id} education={education} />
+        ))}
+        {profile.experience.map(experience => (
+          <Experience key={experience._id} experience={experience} />
+        ))}
+        {profile.reference.map(reference => (
+          <Reference key={reference._id} reference={reference} />
+        ))}
       </Fragment>}
     </Fragment>
   )
