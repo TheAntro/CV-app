@@ -7,6 +7,7 @@ import Skills from './Skills';
 import Education from './Education';
 import Experience from './Experience';
 import Reference from './Reference';
+import Spinner from '../Spinner';
 
 const Profile = ({ getProfileById, profile: { profile }, match }) => {
   useEffect(() => {
@@ -14,7 +15,7 @@ const Profile = ({ getProfileById, profile: { profile }, match }) => {
   }, [getProfileById, match.params.id])
   return (
     <Fragment>
-      {profile === null ? <p>Loading</p> : <Fragment>
+      {profile === null ? <Spinner /> : <Fragment>
         <Personal profile={ profile } />
         <Skills skills={ profile.skill[0] } />
         {profile.education.map(education => (
