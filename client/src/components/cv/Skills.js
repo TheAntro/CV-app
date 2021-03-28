@@ -5,10 +5,10 @@ const Skills = ({
   skills: { mainSkills, otherSkills, description }
 }) => {
   return (
-    <div>
-      <p>{ description }</p>
-      <p>{ mainSkills.join(', ') }</p>
-      <p>{ otherSkills.join(', ') }</p>
+    <div class="card-body">
+      <p class="card-text">{ description }</p>
+      <p class="card-text">{ mainSkills.join(', ') }</p>
+      <p class="card-text">{ otherSkills.join(', ') }</p>
     </div>
   )
 }

@@ -9,14 +9,14 @@ const Personal = ({ profile: {
   social,
 }}) => {
   return (
-    <div>
-      <p>{ name }</p>
-      <p>{ address.street }, { address.zipcode } { address.city }</p>
-      <p>{ email }</p>
-      <p>{ phone }</p>
-      <p> { social.linkedin } </p>
-      <p> { social.github } </p>
-      <p> { social.scholar } </p>
+    <div class="card-body">
+      <h5 class="card-title">{ name }</h5>
+      <p class="card-subtitle mb-2 text-muted">{ email }</p>
+      <p class="card-subtitle mb-2 text-muted">{ phone }</p>
+      <p class="card-subtitle mb-2 text-muted">{ address.city }</p>
+      <p class="card-text"><a href="#" class="fa fa-linkedin"></a> { social.linkedin } </p>
+      <p class="card-text"><a href="#" class="fa fa-github"></a> { social.github } </p>
+      <p class="card-text"><a href="#" class="fa fa-google"></a> { social.scholar } </p>
     </div>
   )
 }

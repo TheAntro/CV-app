@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 const Reference = ({
   reference: { name, title, phone, email, company }
 }) => (
-  <div>
-    <p>{ name }. { title }, { company }. { email }, { phone }.</p>
+  <div class="card-body">
+    <p class="card-text">{ name }. { title }, { company }. { email }, { phone }.</p>
   </div>
 );
 
