@@ -7,7 +7,7 @@ const initialState = {
   loading: true,
 };
 
-export default function (state = initialState, action) {
+export default function profile(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {

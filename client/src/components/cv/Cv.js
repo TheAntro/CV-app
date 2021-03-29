@@ -14,29 +14,15 @@ const Profile = ({ getProfileById, profile: { profile }, match }) => {
     getProfileById(match.params.id);
   }, [getProfileById, match.params.id])
   return (
-    <div class="container mt-5 mb-5">
-      {profile === null ? <Spinner /> : <div class="card">
+    <Fragment>
+      {profile === null ? <Spinner /> : <div class="container mt-5 mb-5">
         <Personal profile={ profile } />
-        <hr/>
         <Skills skills={ profile.skill[0] } />
-        <hr/>
-        {profile.education.map(education => (
-          <Fragment>
-            <Education key={education._id} education={education} />
-            <hr/>
-          </Fragment>
-        ))}
-        {profile.experience.map(experience => (
-          <Fragment>
-            <Experience key={experience._id} experience={experience} />
-            <hr/>
-          </Fragment>
-        ))}
-        {profile.reference.map(reference => (
-          <Reference key={reference._id} reference={reference} />
-        ))}
+        <Education educations={ profile.education } />
+        <Experience experiences={ profile.experience } />
+        <Reference references={ profile.reference } />
       </div>}
-    </div>
+    </Fragment>
   )
 }
 

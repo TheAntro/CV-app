@@ -1,20 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ExperienceItem from './ExperienceItem'
 
-const Experience = ({
-  experience: { company, title, from, to, description }
-}) => (
-  <div class="card-body">
-    <h5 class="card-title">{ company }</h5>
-    <p class="card-text">{ title }</p>
-    <p class="card-text">{ from }{ to ? ' - '.concat(to) : '' }</p>
-    <p class="card-text">{ description }</p>
+const Experience = ({ experiences }) => (
+  <div class="card mt-2">
+    <div class="card-header">
+      Työkokemus
+    </div>
+    <ul class="list-group list-group-flush">
+      {experiences.map(experience => (
+        <ExperienceItem key={experience._id} experience={experience} />
+      ))}
+    </ul>
   </div>
 );
 
 
 Experience.propTypes = {
-  experience: PropTypes.object.isRequired,
+  experiences: PropTypes.array.isRequired,
 }
 
 export default Experience

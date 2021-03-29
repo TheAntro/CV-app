@@ -1,21 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import EducationItem from './EducationItem'
 
-const Education = ({
-  education: { school, degree, major, minors, from, to }
-}) => (
-  <div class="card-body">
-    <h5 class="card-title">{ school }</h5>
-    <p class="card-text">{ degree }</p>
-    <p class="card-text">{ from }{ to ? ' - '.concat(to) : '' }</p>
-    <p class="card-text">{ major }  </p>
-    <p class="card-text">{ minors.join(', ')}</p>
+const Education = ({ educations }) => (
+  <div class="card mt-2">
+    <div class="card-header">
+      Koulutus
+    </div>
+    <ul class="list-group list-group-flush">
+      {educations.map(education => (
+        <EducationItem key={education._id} education={education} />
+      ))}
+    </ul>
   </div>
-);
-
+)
 
 Education.propTypes = {
-  education: PropTypes.object.isRequired,
+  educations: PropTypes.array.isRequired,
 }
 
 export default Education

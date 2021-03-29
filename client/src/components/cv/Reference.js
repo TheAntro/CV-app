@@ -1,17 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import ReferenceItem from './ReferenceItem'
 
-const Reference = ({
-  reference: { name, title, phone, email, company }
-}) => (
-  <div class="card-body">
-    <p class="card-text">{ name }. { title }, { company }. { email }, { phone }.</p>
+const Reference = ({ references }) => (
+  <div class="card mt-2">
+    <div class="card-header">
+      Suosittelijat
+    </div>
+    <ul class="list-group list-group-flush">
+      {references.map(reference => (
+          <ReferenceItem key={reference._id} reference={reference} />
+      ))}
+    </ul>
   </div>
+  
 );
 
 
 Reference.propTypes = {
-  reference: PropTypes.object.isRequired,
+  references: PropTypes.array.isRequired,
 }
 
 export default Reference
